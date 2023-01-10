@@ -18,6 +18,7 @@ public class PlayerLoggedInBroadCastListener {
 
     /**
      * 监听用户登陆事件
+     *
      * @param playerLoggedInEvent 用户登陆事件
      */
     @SubscribeEvent
