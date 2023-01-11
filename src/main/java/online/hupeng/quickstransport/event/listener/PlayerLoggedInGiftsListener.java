@@ -8,7 +8,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import online.hupeng.quickstransport.DateUtil;
+import online.hupeng.quickstransport.extra.ExtraWorldSaveData;
+import online.hupeng.quickstransport.util.DateUtil;
 import online.hupeng.quickstransport.constant.ModConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,8 @@ public class PlayerLoggedInGiftsListener {
         int giftsQuantity;
         String tips;
         PlayerEntity player = playerLoggedInEvent.getPlayer();
-        boolean newPlayer = !player.getPersistentData().getBoolean(ModConstant.PlayerPersistentData.OLD_PLAYER);
+        ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getCommandSenderWorld());
+        boolean newPlayer = !extraWorldSaveData.contains(player.getUUID());
         if (newPlayer) {
             logger.info("该玩家为新玩家, 玩家uuidL {}, 玩家名称: {}", player.getUUID(), player.getName().getString());
             giftsQuantity = ModConstant.NEW_PLAYER_GIFTS_QUANTITY;
@@ -39,7 +41,7 @@ public class PlayerLoggedInGiftsListener {
             giftsQuantity = ModConstant.PLAYER_LOGIN_GIFTS_QUANTITY;
             tips = String.format("您已获得登录奖励, 熟牛肉*%d", giftsQuantity);
         }
-        if (haveDailyGifts(player.getPersistentData().getLong(ModConstant.PlayerPersistentData.LAST_LOGIN))) {
+        if (haveDailyGifts(extraWorldSaveData.getPlayerLastLoginTime(player.getUUID()))) {
             ItemStack cookedBeefItemStack = new ItemStack(Items.COOKED_BEEF, giftsQuantity);
             if (!player.inventory.add(cookedBeefItemStack)) {
                 logger.info("无法向玩家背包添加登录奖励，将为玩家生成掉落物");
@@ -48,8 +50,7 @@ public class PlayerLoggedInGiftsListener {
             logger.info("赠送玩家{}登录奖励成功！", player.getName().getString());
             player.sendMessage(new StringTextComponent(tips), player.getUUID());
         }
-        player.getPersistentData().putBoolean(ModConstant.PlayerPersistentData.OLD_PLAYER, true);
-        player.getPersistentData().putLong(ModConstant.PlayerPersistentData.LAST_LOGIN, new Date().getTime());
+        extraWorldSaveData.updatePlayerLastLoginTime(player.getUUID(), new Date().getTime());
     }
 
     private static boolean haveDailyGifts(Long lastLoginTime) {
