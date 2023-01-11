@@ -4,6 +4,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
+import online.hupeng.quickstransport.constant.ModConstant;
 import online.hupeng.quickstransport.constant.NetWorkPackageType;
 import online.hupeng.quickstransport.network.msg.KeyInputMsg;
 import org.apache.logging.log4j.LogManager;
@@ -30,15 +31,23 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
                     logger.info("响应玩家传送请求, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
                     BlockPos respawnPosition = player.getRespawnPosition();
                     if (respawnPosition != null) {
+                        if (player.totalExperience < ModConstant.TRANSPORT_COST_EXPERIENCE) {
+                            logger.info("无法传送玩家, 玩家经验值不足, 玩家uuid: {}, 玩家名称: {}, 玩家经验值: {}",
+                                    player.getUUID().toString(), player.getName().getString(), player.totalExperience);
+                            player.sendMessage(new StringTextComponent(String.format("您的经验小于%d, 无法传送",
+                                    ModConstant.TRANSPORT_COST_EXPERIENCE)), player.getUUID());
+                            return;
+                        }
+                        player.giveExperiencePoints(-ModConstant.TRANSPORT_COST_EXPERIENCE);
                         player.moveTo(respawnPosition.getX(), respawnPosition.getY(), respawnPosition.getZ());
                         logger.info("传送玩家成功, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
-                    } else {
-                        logger.info("无法传送，玩家重生点无效, 玩家uuid: {}, 玩家名称: {}",  player.getUUID().toString(), player.getName().getString());
-                        player.sendMessage(new StringTextComponent("无法传送，您的重生点无效"), player.getUUID());
+                        return;
                     }
-                } else {
-                    logger.info("无法获取到玩家实体");
+                    logger.info("无法传送，玩家重生点无效, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
+                    player.sendMessage(new StringTextComponent("无法传送，您的重生点无效"), player.getUUID());
+                    return;
                 }
+                logger.info("无法获取到玩家实体");
             }
         });
     }
