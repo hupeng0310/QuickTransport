@@ -14,7 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import online.hupeng.quickstransport.constant.ModConstant;
-import online.hupeng.quickstransport.network.handler.NetWorkHandler;
+import online.hupeng.quickstransport.network.channel.ChannelWrapperRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +46,7 @@ public class QuickTransport
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-        NetWorkHandler.KEY_INPUT.register();
+        ChannelWrapperRegister.init();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
