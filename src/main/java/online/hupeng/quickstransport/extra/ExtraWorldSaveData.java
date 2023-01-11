@@ -106,7 +106,7 @@ public class ExtraWorldSaveData extends WorldSavedData {
                 posCompoundNBT.put(playerPosEntry.getKey(), vector3dCompoundNBT);
             }
             playerCompoundNBT.put("keyPos", posCompoundNBT);
-            compoundNBT.put(uuid, posCompoundNBT);
+            compoundNBT.put(uuid, playerCompoundNBT);
         }
         return compoundNBT;
     }
