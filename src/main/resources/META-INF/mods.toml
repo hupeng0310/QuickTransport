@@ -19,7 +19,7 @@ modId="quicktransport" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
-version="${file.jarVersion}" #mandatory
+version="0.10" #mandatory
  # A display name for the mod
 displayName="快速传送" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -34,6 +34,8 @@ credits="快速传送到标记点" #optional
 authors="hupgwuty" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
+玩家可以按键盘Z，X键设置两个自定义标记点，按C，V键即可传送到Z，X指定的坐标位置，按B可以回到重生点。
+每次传送将消耗玩家50点经验值
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.quicktransport]] #optional
