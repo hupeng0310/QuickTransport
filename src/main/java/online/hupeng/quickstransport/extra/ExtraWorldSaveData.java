@@ -8,6 +8,7 @@ import net.minecraft.world.storage.WorldSavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +46,14 @@ public class ExtraWorldSaveData extends WorldSavedData {
             return this.playerExtraInfos.get(uuid).getLastLogin();
         }
         return 0;
+    }
+
+    @Nullable
+    public Vector3d getPlayerKeyPos(UUID uuid, String key) {
+        if (this.contains(uuid)) {
+            return this.playerExtraInfos.get(uuid).getKeyPos().get(key);
+        }
+        return null;
     }
 
     public void updatePlayerLastLoginTime(UUID uuid, long lastLoginTime) {
