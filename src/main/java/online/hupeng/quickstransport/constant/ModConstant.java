@@ -28,7 +28,7 @@ public class ModConstant {
     /**
      * 传送花费经验值
      */
-    public final static int TRANSPORT_COST_EXPERIENCE = 100;
+    public final static int TRANSPORT_COST_EXPERIENCE = 50;
 
     /**
      * 玩家特殊NBT标签
