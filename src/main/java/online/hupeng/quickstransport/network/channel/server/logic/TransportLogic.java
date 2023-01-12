@@ -2,7 +2,6 @@ package online.hupeng.quickstransport.network.channel.server.logic;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -11,6 +10,7 @@ import online.hupeng.quickstransport.constant.ModConstant;
 import online.hupeng.quickstransport.constant.NetWorkPackageType;
 import online.hupeng.quickstransport.extra.ExtraWorldSaveData;
 import online.hupeng.quickstransport.network.msg.KeyInputMsg;
+import online.hupeng.quickstransport.util.MinecraftUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,13 +50,13 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
             switch (keyboardKey) {
                 case B:
                     logger.info("响应玩家传送请求, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
-                    BlockPos respawnPosition = player.getRespawnPosition();
+                    Vector3d respawnPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.B.getKey());
                     if (respawnPosition == null) {
                         logger.info("无法传送，玩家重生点无效, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
                         player.sendMessage(new StringTextComponent("无法传送，您的重生点无效"), player.getUUID());
                         return;
                     }
-                    transportPlayer(player, new Vector3d(player.getX(), player.getY(), player.getZ()));
+                    transportPlayer(player, respawnPosition);
                     break;
                 case C:
                     Vector3d zPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.Z.getKey());
@@ -79,7 +79,8 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
                 case X:
                 case Z:
                     addPlayerPos(player, keyboardKey);
-                    player.sendMessage(new StringTextComponent(String.format("已为您设置%s键坐标点%s", keyboardKey.getKey(), posToString(player.position()))), player.getUUID());
+                    player.sendMessage(new StringTextComponent(String.format("已为您设置%s键坐标点%s", keyboardKey.getKey(),
+                            MinecraftUtil.v3dToString(player.position()))), player.getUUID());
                     break;
             }
         });
@@ -87,7 +88,7 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
 
     private void addPlayerPos(PlayerEntity player, KeyboardKey keyboardKey) {
         ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getCommandSenderWorld());
-        extraWorldSaveData.addPlayerKeyPos(player.getUUID(), keyboardKey.getKey(), player.position());
+        extraWorldSaveData.putPlayerKeyPos(player.getUUID(), keyboardKey.getKey(), player.position());
     }
 
 
@@ -103,9 +104,5 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
         player.giveExperiencePoints(-ModConstant.TRANSPORT_COST_EXPERIENCE);
         player.moveTo(pos);
         logger.info("传送玩家成功, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
-    }
-
-    private String posToString(Vector3d pos) {
-        return String.format("%.2f, %.2f, %.2f", pos.x(), pos.y(), pos.z());
     }
 }

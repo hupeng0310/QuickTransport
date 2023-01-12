@@ -64,7 +64,7 @@ public class ExtraWorldSaveData extends WorldSavedData {
         this.setDirty();
     }
 
-    public void addPlayerKeyPos(UUID uuid, String key, Vector3d pos) {
+    public void putPlayerKeyPos(UUID uuid, String key, Vector3d pos) {
         if (!this.contains(uuid)) {
             initPlayerExtraInfo(uuid);
         }
