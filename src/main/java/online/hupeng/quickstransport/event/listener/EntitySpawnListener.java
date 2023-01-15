@@ -21,11 +21,25 @@ public class EntitySpawnListener {
     public static void entitySpawn(BiomeLoadingEvent event) {
         if (event.getCategory() != Biome.Category.NONE) {
             MobSpawnInfoBuilder spawnInfoBuilder = event.getSpawns();
-            spawnInfoBuilder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE, 95, 10, 10))
-                    .addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE, 95, 10, 10));
-            List<MobSpawnInfo.Spawners> spawnersList = spawnInfoBuilder.getSpawner(EntityClassification.MONSTER);
-            //删除原有的僵尸和骷髅
-            spawnersList.removeIf(spawners -> spawners.type == EntityType.ZOMBIE || spawners.type == EntityType.SKELETON);
+            List<MobSpawnInfo.Spawners> monsterList = spawnInfoBuilder.getSpawner(EntityClassification.MONSTER);
+            int zombieIndex = -1, skeletonIndex = -1;
+            for (int i = 0; i < monsterList.size(); i++) {
+                MobSpawnInfo.Spawners spawner = monsterList.get(i);
+                if (spawner.type == EntityType.SKELETON) {
+                    skeletonIndex = i;
+                }
+                if (spawner.type == EntityType.ZOMBIE) {
+                    zombieIndex = i;
+                }
+            }
+            if (skeletonIndex != -1) {
+                monsterList.remove(skeletonIndex);
+                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE, 95, 10, 10));
+            }
+            if (zombieIndex != -1) {
+                monsterList.remove(zombieIndex);
+                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE, 95, 10, 10));
+            }
         }
     }
 }

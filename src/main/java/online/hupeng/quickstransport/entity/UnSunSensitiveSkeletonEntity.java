@@ -29,7 +29,6 @@ public class UnSunSensitiveSkeletonEntity extends SkeletonEntity {
     public UnSunSensitiveSkeletonEntity(EntityType<? extends SkeletonEntity> p_i50194_1_, World p_i50194_2_) {
         super(p_i50194_1_, p_i50194_2_);
         this.xpReward = 20;
-        this.getCustomName();
         this.setCustomName(new StringTextComponent("骷髅"));
     }
 
@@ -50,7 +49,7 @@ public class UnSunSensitiveSkeletonEntity extends SkeletonEntity {
         if (difficulty.getDifficulty() == Difficulty.HARD) {
             ItemStack mainHandStack = this.getMainHandItem();
             if (mainHandStack.canApplyAtEnchantingTable(Enchantments.FLAMING_ARROWS)) {
-                float f = 0;
+                float f;
                 f = random.nextFloat();
                 if (f < 0.5f) {
                     mainHandStack.enchant(Enchantments.FLAMING_ARROWS, 1);
