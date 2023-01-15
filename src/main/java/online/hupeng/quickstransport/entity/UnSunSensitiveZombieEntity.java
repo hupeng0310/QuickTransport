@@ -8,6 +8,7 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -18,6 +19,7 @@ public class UnSunSensitiveZombieEntity extends ZombieEntity {
     public UnSunSensitiveZombieEntity(EntityType<? extends ZombieEntity> entityType, World world) {
         super(entityType, world);
         this.xpReward = 20;
+        this.setCustomName(new StringTextComponent("僵尸"));
         ItemStack itemStack = new ItemStack(Items.IRON_SWORD);
         itemStack.enchant(Enchantments.FIRE_ASPECT, 1);
         this.setItemInHand(Hand.MAIN_HAND, itemStack);

@@ -10,6 +10,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
@@ -28,6 +29,8 @@ public class UnSunSensitiveSkeletonEntity extends SkeletonEntity {
     public UnSunSensitiveSkeletonEntity(EntityType<? extends SkeletonEntity> p_i50194_1_, World p_i50194_2_) {
         super(p_i50194_1_, p_i50194_2_);
         this.xpReward = 20;
+        this.getCustomName();
+        this.setCustomName(new StringTextComponent("骷髅"));
     }
 
 
