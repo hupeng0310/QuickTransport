@@ -28,12 +28,12 @@ public class EntityTypeConstant {
                 .sized(0.6F, 1.95F)
                 .clientTrackingRange(8)
                 .build("zombie");
-        UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE.setRegistryName("minecraft", "zombie");
+        UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE.setRegistryName("quicktransport", "zombie");
 
         UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE = EntityType.Builder.<UnSunSensitiveSkeletonEntity>of(UnSunSensitiveSkeletonEntity::new, EntityClassification.MONSTER)
                 .sized(0.6F, 1.99F)
                 .clientTrackingRange(8)
                 .build("skeleton");
-        UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE.setRegistryName("minecraft", "skeleton");
+        UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE.setRegistryName("quicktransport", "skeleton");
     }
 }
