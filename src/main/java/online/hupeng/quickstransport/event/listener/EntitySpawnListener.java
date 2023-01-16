@@ -19,7 +19,7 @@ public class EntitySpawnListener {
     //监听区块加载事件
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void entitySpawn(BiomeLoadingEvent event) {
-        if (event.getCategory() != Biome.Category.NONE) {
+        if (event.getName() != null) {
             MobSpawnInfoBuilder spawnInfoBuilder = event.getSpawns();
             List<MobSpawnInfo.Spawners> monsterList = spawnInfoBuilder.getSpawner(EntityClassification.MONSTER);
             int zombieIndex = -1, skeletonIndex = -1;
@@ -33,12 +33,14 @@ public class EntitySpawnListener {
                 }
             }
             if (skeletonIndex != -1) {
-                monsterList.remove(skeletonIndex);
-                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE, 95, 6, 6));
+                MobSpawnInfo.Spawners skeletonSpawners = monsterList.get(skeletonIndex);
+                monsterList.set(skeletonIndex, new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE,
+                        skeletonSpawners.weight, skeletonSpawners.minCount, skeletonSpawners.maxCount));
             }
             if (zombieIndex != -1) {
-                monsterList.remove(zombieIndex);
-                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE, 95, 6, 6));
+                MobSpawnInfo.Spawners zombieSpawners = monsterList.get(zombieIndex);
+                monsterList.set(zombieIndex, new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE,
+                        zombieSpawners.weight, zombieSpawners.minCount, zombieSpawners.maxCount));
             }
         }
     }

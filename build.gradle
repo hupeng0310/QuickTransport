@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.3.2'
+version = '0.3.3'
 group = 'online.hupeng' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'quick-transport'
 
