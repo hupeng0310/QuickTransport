@@ -34,11 +34,11 @@ public class EntitySpawnListener {
             }
             if (skeletonIndex != -1) {
                 monsterList.remove(skeletonIndex);
-                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE, 95, 10, 10));
+                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_SKELETON_ENTITY_TYPE, 95, 6, 6));
             }
             if (zombieIndex != -1) {
                 monsterList.remove(zombieIndex);
-                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE, 95, 10, 10));
+                monsterList.add(new MobSpawnInfo.Spawners(EntityTypeConstant.UN_SUN_SENSITIVE_ZOMBIE_ENTITY_TYPE, 95, 6, 6));
             }
         }
     }
