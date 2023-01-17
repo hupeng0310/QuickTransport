@@ -9,7 +9,7 @@ import online.hupeng.quickstransport.entity.UnSunSensitiveZombieEntity;
 
 
 /**
- * 为实体注册
+ * 为实体注册能力
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AttributeAddListener {
