@@ -18,6 +18,6 @@ public class ModConstant {
     /**
      * 传送花费经验值
      */
-    public final static int TRANSPORT_COST_EXPERIENCE = 50;
+    public final static int TRANSPORT_COST_EXPERIENCE = 20;
 
 }

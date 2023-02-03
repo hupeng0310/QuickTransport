@@ -34,8 +34,8 @@ credits="快速传送到标记点" #optional
 authors="hupgwuty" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-玩家可以按键盘Z，X键设置两个自定义标记点，按C，V键即可传送到Z，X指定的坐标位置，按B可以回到重生点。
-每次传送将消耗玩家50点经验值
+玩家可以按键盘CTR+Z，CTR+X键设置两个自定义标记点，按CTR+C，CTR+V键即可传送到Z，X指定的坐标位置，按B可以回到重生点。
+每次传送将消耗玩家20点经验值
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.quicktransport]] #optional

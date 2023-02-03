@@ -62,7 +62,7 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
                     Vector3d zPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.Z.getKey());
                     if (zPosition == null) {
                         logger.info("无法传送，玩家未设置{}键坐标, 玩家uuid: {}, 玩家名称: {}", KeyboardKey.Z.getKey(), player.getUUID().toString(), player.getName().getString());
-                        player.sendMessage(new StringTextComponent("无法传送，您未设置Z点坐标，请按键盘Z设置Z点坐标"), player.getUUID());
+                        player.sendMessage(new StringTextComponent("无法传送，您未设置Z点坐标，请按键盘CTR+Z设置Z点坐标"), player.getUUID());
                         return;
                     }
                     transportPlayer(player, zPosition);
@@ -71,7 +71,7 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
                     Vector3d vPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.X.getKey());
                     if (vPosition == null) {
                         logger.info("无法传送，玩家未设置{}键坐标, 玩家uuid: {}, 玩家名称: {}", KeyboardKey.V.getKey(), player.getUUID().toString(), player.getName().getString());
-                        player.sendMessage(new StringTextComponent("无法传送，您未设置X点坐标，请按键盘X设置X点坐标"), player.getUUID());
+                        player.sendMessage(new StringTextComponent("无法传送，您未设置X点坐标，请按键盘CTR+X设置X点坐标"), player.getUUID());
                         return;
                     }
                     transportPlayer(player, vPosition);
