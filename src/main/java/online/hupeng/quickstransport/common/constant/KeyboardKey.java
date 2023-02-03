@@ -1,15 +1,17 @@
 package online.hupeng.quickstransport.common.constant;
 
+import org.lwjgl.glfw.GLFW;
+
 /**
  * 监听键盘按键枚举
  */
 public enum KeyboardKey {
 
-    B(66, "B"),
-    C(67, "C"),
-    V(86, "V"),
-    X(88, "X"),
-    Z(90, "Z");
+    B(GLFW.GLFW_KEY_B, "B"),
+    C(GLFW.GLFW_KEY_C, "C"),
+    V(GLFW.GLFW_KEY_V, "V"),
+    X(GLFW.GLFW_KEY_X, "X"),
+    Z(GLFW.GLFW_KEY_Z, "Z");
 
     private final int KeyCode;
 
