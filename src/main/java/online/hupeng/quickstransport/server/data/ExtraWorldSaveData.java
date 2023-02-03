@@ -42,27 +42,12 @@ public class ExtraWorldSaveData extends WorldSavedData {
         return this.playerExtraInfos.containsKey(uuid);
     }
 
-    public long getPlayerLastLoginTime(UUID uuid) {
-        if (this.contains(uuid)) {
-            return this.playerExtraInfos.get(uuid).getLastLogin();
-        }
-        return 0;
-    }
-
     @Nullable
     public Vector3d getPlayerKeyPos(UUID uuid, String key) {
         if (this.contains(uuid)) {
             return this.playerExtraInfos.get(uuid).getKeyPos().get(key);
         }
         return null;
-    }
-
-    public void updatePlayerLastLoginTime(UUID uuid, long lastLoginTime) {
-        if (!this.contains(uuid)) {
-            initPlayerExtraInfo(uuid);
-        }
-        this.playerExtraInfos.get(uuid).setLastLogin(lastLoginTime);
-        this.setDirty();
     }
 
     public void putPlayerKeyPos(UUID uuid, String key, Vector3d pos) {
@@ -81,7 +66,6 @@ public class ExtraWorldSaveData extends WorldSavedData {
         for (String uuid : compoundNBT.getAllKeys()) {
             PlayerExtraInfo playerExtraInfo = new PlayerExtraInfo();
             CompoundNBT playerCompoundNBT = compoundNBT.getCompound(uuid);
-            playerExtraInfo.setLastLogin(playerCompoundNBT.getLong("lastLogin"));
             Map<String, Vector3d> keyPos = new HashMap<>();
             CompoundNBT posCompoundNBT = playerCompoundNBT.getCompound("keyPos");
             for (String key : posCompoundNBT.getAllKeys()) {
@@ -106,7 +90,6 @@ public class ExtraWorldSaveData extends WorldSavedData {
             String uuid = entry.getKey().toString();
             PlayerExtraInfo playerExtraInfo = entry.getValue();
             CompoundNBT playerCompoundNBT = new CompoundNBT();
-            playerCompoundNBT.putLong("lastLogin", playerExtraInfo.getLastLogin());
             CompoundNBT posCompoundNBT = new CompoundNBT();
             for (Map.Entry<String, Vector3d> playerPosEntry : playerExtraInfo.getKeyPos().entrySet()) {
                 CompoundNBT vector3dCompoundNBT = new CompoundNBT();
@@ -128,7 +111,6 @@ public class ExtraWorldSaveData extends WorldSavedData {
     private synchronized void initPlayerExtraInfo(UUID uuid) {
         if (!this.playerExtraInfos.containsKey(uuid)) {
             PlayerExtraInfo playerExtraInfo = new PlayerExtraInfo();
-            playerExtraInfo.setLastLogin(0L);
             playerExtraInfo.setKeyPos(new HashMap<>());
             this.playerExtraInfos.put(uuid, playerExtraInfo);
         }
@@ -137,18 +119,7 @@ public class ExtraWorldSaveData extends WorldSavedData {
 
     public static class PlayerExtraInfo {
 
-        private long lastLogin;
-
         private Map<String, Vector3d> keyPos;
-
-        public long getLastLogin() {
-            return lastLogin;
-        }
-
-        public PlayerExtraInfo setLastLogin(long lastLogin) {
-            this.lastLogin = lastLogin;
-            return this;
-        }
 
         public Map<String, Vector3d> getKeyPos() {
             return keyPos;
