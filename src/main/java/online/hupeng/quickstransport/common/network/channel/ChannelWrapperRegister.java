@@ -1,10 +1,8 @@
-package online.hupeng.quickstransport.network.channel;
+package online.hupeng.quickstransport.common.network.channel;
 
-import online.hupeng.quickstransport.constant.ModConstant;
-import online.hupeng.quickstransport.constant.NetWorkPackageType;
-import online.hupeng.quickstransport.constant.SimpleChannels;
-import online.hupeng.quickstransport.network.channel.server.KeyInputChannelWrapper;
-import online.hupeng.quickstransport.network.channel.server.SimpleChannelWrapper;
+import online.hupeng.quickstransport.common.constant.ModConstant;
+import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
+import online.hupeng.quickstransport.common.constant.SimpleChannels;
 
 import java.util.concurrent.ConcurrentHashMap;
 

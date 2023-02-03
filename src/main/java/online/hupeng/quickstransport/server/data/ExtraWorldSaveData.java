@@ -1,4 +1,4 @@
-package online.hupeng.quickstransport.extra;
+package online.hupeng.quickstransport.server.data;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundNBT;
@@ -35,6 +35,7 @@ public class ExtraWorldSaveData extends WorldSavedData {
 
     /**
      * 是否存在用户信息
+     *
      * @param uuid UUID
      */
     public boolean contains(UUID uuid) {

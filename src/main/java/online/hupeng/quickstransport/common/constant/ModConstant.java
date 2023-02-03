@@ -1,4 +1,4 @@
-package online.hupeng.quickstransport.constant;
+package online.hupeng.quickstransport.common.constant;
 
 /**
  * mod基础常量类

@@ -1,7 +1,7 @@
-package online.hupeng.quickstransport.network.channel.server;
+package online.hupeng.quickstransport.common.network.channel;
 
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import online.hupeng.quickstransport.constant.NetWorkPackageType;
+import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
 
 /**
  * simpleChannelWrapper包装类

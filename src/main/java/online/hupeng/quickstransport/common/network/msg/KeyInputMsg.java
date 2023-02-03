@@ -1,6 +1,6 @@
-package online.hupeng.quickstransport.network.msg;
+package online.hupeng.quickstransport.common.network.msg;
 
-import online.hupeng.quickstransport.constant.NetWorkPackageType;
+import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
 
 /**
  * 键盘输入数据包

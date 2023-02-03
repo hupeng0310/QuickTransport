@@ -1,11 +1,11 @@
-package online.hupeng.quickstransport.network.channel.server;
+package online.hupeng.quickstransport.common.network.channel;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
-import online.hupeng.quickstransport.constant.ModConstant;
-import online.hupeng.quickstransport.constant.NetWorkPackageType;
-import online.hupeng.quickstransport.network.channel.server.logic.TransportLogic;
-import online.hupeng.quickstransport.network.msg.KeyInputMsg;
+import online.hupeng.quickstransport.common.constant.ModConstant;
+import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
+import online.hupeng.quickstransport.common.network.msg.KeyInputMsg;
+import online.hupeng.quickstransport.server.network.channel.logic.TransportLogic;
 
 public class KeyInputChannelWrapper extends SimpleChannelWrapper<KeyInputMsg> {
 

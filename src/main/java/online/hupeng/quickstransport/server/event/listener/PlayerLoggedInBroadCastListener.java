@@ -1,4 +1,4 @@
-package online.hupeng.quickstransport.event.listener;
+package online.hupeng.quickstransport.server.event.listener;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

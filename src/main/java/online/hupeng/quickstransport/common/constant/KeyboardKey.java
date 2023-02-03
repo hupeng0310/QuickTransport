@@ -1,4 +1,4 @@
-package online.hupeng.quickstransport.constant;
+package online.hupeng.quickstransport.common.constant;
 
 /**
  * 监听键盘按键枚举
