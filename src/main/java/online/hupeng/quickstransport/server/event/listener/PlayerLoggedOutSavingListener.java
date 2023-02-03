@@ -1,7 +1,6 @@
 package online.hupeng.quickstransport.server.event.listener;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.storage.DimensionSavedDataManager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,9 +18,9 @@ public class PlayerLoggedOutSavingListener {
 
     @SubscribeEvent
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent playerLoggedOutEvent) {
-        PlayerEntity player = playerLoggedOutEvent.getPlayer();
+        Player player = playerLoggedOutEvent.getEntity();
         logger.info("响应玩家登出事件保存世界存储信息, 玩家uuid: {}, 玩家名称: {}", player.getUUID(), player.getName().getString());
-        DimensionSavedDataManager dimensionSavedDataManager = player.getCommandSenderWorld().getServer().overworld().getDataStorage();
-        dimensionSavedDataManager.save();
+        var dimensionDataStorage = player.getCommandSenderWorld().getServer().overworld().getDataStorage();
+        dimensionDataStorage.save();
     }
 }

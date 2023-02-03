@@ -1,6 +1,6 @@
 package online.hupeng.quickstransport.common.network.channel;
 
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.simple.SimpleChannel;
 import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
 
 /**

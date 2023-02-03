@@ -1,12 +1,12 @@
 package online.hupeng.quickstransport.server.data;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldSavedData;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.mojang.logging.LogUtils;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,17 +20,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ExtraWorldSaveData extends WorldSavedData {
+public class ExtraWorldSaveData extends SavedData {
 
-    private final static Logger logger = LogManager.getLogger(ExtraWorldSaveData.class);
+    private final static Logger logger = LogUtils.getLogger();
 
     /**
      * 用户额外信息
      */
     private Map<UUID, PlayerExtraInfo> playerExtraInfos = new ConcurrentHashMap<>();
 
-    public static ExtraWorldSaveData get(World world) {
-        return world.getServer().overworld().getDataStorage().computeIfAbsent(() -> new ExtraWorldSaveData("QuickTransport"), "QuickTransport");
+    public static ExtraWorldSaveData get(Level serverLevel) {
+        return serverLevel.getServer().overworld().getDataStorage().computeIfAbsent(compoundTag -> {
+            ExtraWorldSaveData extraWorldSaveData = new ExtraWorldSaveData();
+            extraWorldSaveData.load(compoundTag);
+            return extraWorldSaveData;
+        }, ExtraWorldSaveData::new, "QuickTransport");
     }
 
     /**
@@ -43,14 +47,14 @@ public class ExtraWorldSaveData extends WorldSavedData {
     }
 
     @Nullable
-    public Vector3d getPlayerKeyPos(UUID uuid, String key) {
+    public Vec3 getPlayerKeyPos(UUID uuid, String key) {
         if (this.contains(uuid)) {
             return this.playerExtraInfos.get(uuid).getKeyPos().get(key);
         }
         return null;
     }
 
-    public void putPlayerKeyPos(UUID uuid, String key, Vector3d pos) {
+    public void putPlayerKeyPos(UUID uuid, String key, Vec3 pos) {
         if (!this.contains(uuid)) {
             initPlayerExtraInfo(uuid);
         }
@@ -59,19 +63,18 @@ public class ExtraWorldSaveData extends WorldSavedData {
     }
 
     @ParametersAreNonnullByDefault
-    @Override
-    public void load(CompoundNBT compoundNBT) {
+    public void load(CompoundTag compoundTag) {
         logger.info("调用加载玩家外部数据方法");
         playerExtraInfos = new ConcurrentHashMap<>();
-        for (String uuid : compoundNBT.getAllKeys()) {
+        for (String uuid : compoundTag.getAllKeys()) {
             PlayerExtraInfo playerExtraInfo = new PlayerExtraInfo();
-            CompoundNBT playerCompoundNBT = compoundNBT.getCompound(uuid);
-            Map<String, Vector3d> keyPos = new HashMap<>();
-            CompoundNBT posCompoundNBT = playerCompoundNBT.getCompound("keyPos");
-            for (String key : posCompoundNBT.getAllKeys()) {
-                CompoundNBT vector3dCompoundNBT = posCompoundNBT.getCompound(key);
-                Vector3d vector3d = new Vector3d(vector3dCompoundNBT.getDouble("x"), vector3dCompoundNBT.getDouble("y"), vector3dCompoundNBT.getDouble("z"));
-                keyPos.put(key, vector3d);
+            CompoundTag playerCompoundTag = compoundTag.getCompound(uuid);
+            Map<String, Vec3> keyPos = new HashMap<>();
+            CompoundTag posCompoundTag = playerCompoundTag.getCompound("keyPos");
+            for (String key : posCompoundTag.getAllKeys()) {
+                CompoundTag vector3dCompoundTag = posCompoundTag.getCompound(key);
+                Vec3 vec3 = new Vec3(vector3dCompoundTag.getDouble("x"), vector3dCompoundTag.getDouble("y"), vector3dCompoundTag.getDouble("z"));
+                keyPos.put(key, vec3);
             }
             playerExtraInfo.setKeyPos(keyPos);
             this.playerExtraInfos.put(UUID.fromString(uuid), playerExtraInfo);
@@ -79,33 +82,32 @@ public class ExtraWorldSaveData extends WorldSavedData {
         this.setDirty();
     }
 
-
     @Override
-    public CompoundNBT save(CompoundNBT compoundNBT) {
+    public CompoundTag save(CompoundTag compoundTag) {
         logger.info("调用保存玩家外部数据方法");
         if (playerExtraInfos == null) {
-            return compoundNBT;
+            return compoundTag;
         }
         for (Map.Entry<UUID, PlayerExtraInfo> entry : playerExtraInfos.entrySet()) {
             String uuid = entry.getKey().toString();
             PlayerExtraInfo playerExtraInfo = entry.getValue();
-            CompoundNBT playerCompoundNBT = new CompoundNBT();
-            CompoundNBT posCompoundNBT = new CompoundNBT();
-            for (Map.Entry<String, Vector3d> playerPosEntry : playerExtraInfo.getKeyPos().entrySet()) {
-                CompoundNBT vector3dCompoundNBT = new CompoundNBT();
+            CompoundTag playerCompoundTag = new CompoundTag();
+            CompoundTag posCompoundTag = new CompoundTag();
+            for (Map.Entry<String, Vec3> playerPosEntry : playerExtraInfo.getKeyPos().entrySet()) {
+                CompoundTag vector3dCompoundNBT = new CompoundTag();
                 vector3dCompoundNBT.putDouble("x", playerPosEntry.getValue().x());
                 vector3dCompoundNBT.putDouble("y", playerPosEntry.getValue().y());
                 vector3dCompoundNBT.putDouble("z", playerPosEntry.getValue().z());
-                posCompoundNBT.put(playerPosEntry.getKey(), vector3dCompoundNBT);
+                posCompoundTag.put(playerPosEntry.getKey(), vector3dCompoundNBT);
             }
-            playerCompoundNBT.put("keyPos", posCompoundNBT);
-            compoundNBT.put(uuid, playerCompoundNBT);
+            playerCompoundTag.put("keyPos", posCompoundTag);
+            compoundTag.put(uuid, playerCompoundTag);
         }
-        return compoundNBT;
+        return compoundTag;
     }
 
-    public ExtraWorldSaveData(String id) {
-        super(id);
+    public ExtraWorldSaveData() {
+        super();
     }
 
     private synchronized void initPlayerExtraInfo(UUID uuid) {
@@ -119,13 +121,13 @@ public class ExtraWorldSaveData extends WorldSavedData {
 
     public static class PlayerExtraInfo {
 
-        private Map<String, Vector3d> keyPos;
+        private Map<String, Vec3> keyPos;
 
-        public Map<String, Vector3d> getKeyPos() {
+        public Map<String, Vec3> getKeyPos() {
             return keyPos;
         }
 
-        public PlayerExtraInfo setKeyPos(Map<String, Vector3d> keyPos) {
+        public PlayerExtraInfo setKeyPos(Map<String, Vec3> keyPos) {
             this.keyPos = keyPos;
             return this;
         }

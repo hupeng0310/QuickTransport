@@ -1,8 +1,7 @@
 package online.hupeng.quickstransport.server.event.listener;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,14 +19,14 @@ public class PlayerSetSpawnListener {
 
     @SubscribeEvent
     public static void onPlayerSetSpawnEvent(PlayerSetSpawnEvent playerSetSpawnEvent) {
-        PlayerEntity player = playerSetSpawnEvent.getPlayer();
+        Player player = playerSetSpawnEvent.getEntity();
         BlockPos newSpawn = playerSetSpawnEvent.getNewSpawn();
         if (newSpawn != null) {
-            ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getCommandSenderWorld());
+            ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getLevel());
             logger.info("保存玩家重生点, 玩家uuid: {}, 出生点坐标: {}", player.getUUID(), MinecraftUtil.blockPosToString(newSpawn));
             extraWorldSaveData.putPlayerKeyPos(player.getUUID(), KeyboardKey.B.getKey(),
                     //记录高度比实际高度高一格，防止卡墙
-                    Vector3d.upFromBottomCenterOf(MinecraftUtil.vector3i(newSpawn), 1));
+                    MinecraftUtil.vec3(newSpawn).add(0, 1, 0));
         }
     }
 }

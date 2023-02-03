@@ -1,7 +1,7 @@
 package online.hupeng.quickstransport.common.network.channel;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkRegistry;
 import online.hupeng.quickstransport.common.constant.ModConstant;
 import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
 import online.hupeng.quickstransport.common.network.msg.KeyInputMsg;

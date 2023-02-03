@@ -1,10 +1,11 @@
 package online.hupeng.quickstransport.server.network.channel.logic;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkEvent;
 import online.hupeng.quickstransport.common.constant.KeyboardKey;
 import online.hupeng.quickstransport.common.constant.ModConstant;
 import online.hupeng.quickstransport.common.constant.NetWorkPackageType;
@@ -40,64 +41,63 @@ public class TransportLogic implements BiConsumer<KeyInputMsg, Supplier<NetworkE
                 logger.info("服务端接收到未知按键, 按键keyCode: {}", key);
                 return;
             }
-            ServerPlayerEntity player = context.getSender();
+            ServerPlayer player = context.getSender();
             if (player == null) {
                 logger.info("无法获取发起事件玩家实体");
                 return;
             }
             logger.info("服务端响应玩家键盘监听事件, 玩家uuid: {}, 玩家名称: {}, keyCode: {}", player.getUUID(), player.getName().getString(), key);
-            ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getCommandSenderWorld());
+            ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getLevel());
             switch (keyboardKey) {
-                case B:
+                case B -> {
                     logger.info("响应玩家传送请求, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
-                    Vector3d respawnPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.B.getKey());
+                    Vec3 respawnPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.B.getKey());
                     if (respawnPosition == null) {
                         logger.info("无法传送，玩家重生点无效, 玩家uuid: {}, 玩家名称: {}", player.getUUID().toString(), player.getName().getString());
-                        player.sendMessage(new StringTextComponent("无法传送，您的重生点无效"), player.getUUID());
+                        player.sendSystemMessage(MutableComponent.create(new LiteralContents("无法传送，您的重生点无效")));
                         return;
                     }
                     transportPlayer(player, respawnPosition);
-                    break;
-                case C:
-                    Vector3d zPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.Z.getKey());
+                }
+                case C -> {
+                    Vec3 zPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.Z.getKey());
                     if (zPosition == null) {
                         logger.info("无法传送，玩家未设置{}键坐标, 玩家uuid: {}, 玩家名称: {}", KeyboardKey.Z.getKey(), player.getUUID().toString(), player.getName().getString());
-                        player.sendMessage(new StringTextComponent("无法传送，您未设置Z点坐标，请按键盘CTR+Z设置Z点坐标"), player.getUUID());
+                        player.sendSystemMessage(MutableComponent.create(new LiteralContents(("无法传送，您未设置Z点坐标，请按键盘CTR+Z设置Z点坐标"))));
                         return;
                     }
                     transportPlayer(player, zPosition);
-                    break;
-                case V:
-                    Vector3d vPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.X.getKey());
+                }
+                case V -> {
+                    Vec3 vPosition = extraWorldSaveData.getPlayerKeyPos(player.getUUID(), KeyboardKey.X.getKey());
                     if (vPosition == null) {
                         logger.info("无法传送，玩家未设置{}键坐标, 玩家uuid: {}, 玩家名称: {}", KeyboardKey.V.getKey(), player.getUUID().toString(), player.getName().getString());
-                        player.sendMessage(new StringTextComponent("无法传送，您未设置X点坐标，请按键盘CTR+X设置X点坐标"), player.getUUID());
+                        player.sendSystemMessage(MutableComponent.create(new LiteralContents("无法传送，您未设置X点坐标，请按键盘CTR+X设置X点坐标")));
                         return;
                     }
                     transportPlayer(player, vPosition);
-                    break;
-                case X:
-                case Z:
+                }
+                case X, Z -> {
                     addPlayerPos(player, keyboardKey);
-                    player.sendMessage(new StringTextComponent(String.format("已为您设置%s键坐标点%s", keyboardKey.getKey(),
-                            MinecraftUtil.v3dToString(player.position()))), player.getUUID());
-                    break;
+                    player.sendSystemMessage(MutableComponent.create(new LiteralContents(String.format("已为您设置%s键坐标点%s", keyboardKey.getKey(),
+                            MinecraftUtil.vec3ToString(player.position())))));
+                }
             }
         });
     }
 
-    private void addPlayerPos(PlayerEntity player, KeyboardKey keyboardKey) {
+    private void addPlayerPos(Player player, KeyboardKey keyboardKey) {
         ExtraWorldSaveData extraWorldSaveData = ExtraWorldSaveData.get(player.getCommandSenderWorld());
         extraWorldSaveData.putPlayerKeyPos(player.getUUID(), keyboardKey.getKey(), player.position());
     }
 
 
-    private void transportPlayer(PlayerEntity player, Vector3d pos) {
+    private void transportPlayer(ServerPlayer player, Vec3 pos) {
         if (player.totalExperience < ModConstant.TRANSPORT_COST_EXPERIENCE) {
             logger.info("无法传送玩家, 玩家经验值不足, 玩家uuid: {}, 玩家名称: {}, 玩家经验值: {}",
                     player.getUUID().toString(), player.getName().getString(), player.totalExperience);
-            player.sendMessage(new StringTextComponent(String.format("您的经验值为%d，小于%d, 无法传送",
-                    player.totalExperience, ModConstant.TRANSPORT_COST_EXPERIENCE)), player.getUUID());
+            player.sendSystemMessage(MutableComponent.create(new LiteralContents(String.format("您的经验值为%d，小于%d, 无法传送",
+                    player.totalExperience, ModConstant.TRANSPORT_COST_EXPERIENCE))));
             return;
         }
         player.giveExperiencePoints(-ModConstant.TRANSPORT_COST_EXPERIENCE);
