@@ -2,6 +2,7 @@ package online.hupeng.quickstransport.server.event.listener;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,7 +27,7 @@ public class PlayerSetSpawnListener {
             logger.info("保存玩家重生点, 玩家uuid: {}, 出生点坐标: {}", player.getUUID(), MinecraftUtil.blockPosToString(newSpawn));
             extraWorldSaveData.putPlayerKeyPos(player.getUUID(), KeyboardKey.B.getKey(),
                     //记录高度比实际高度高一格，防止卡墙
-                    MinecraftUtil.vec3(newSpawn).add(0, 1, 0));
+                    Vec3.upFromBottomCenterOf(MinecraftUtil.vec3i(newSpawn), 1));
         }
     }
 }
