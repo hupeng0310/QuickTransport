@@ -30,19 +30,4 @@ public class ModConstant {
      */
     public final static int TRANSPORT_COST_EXPERIENCE = 50;
 
-    /**
-     * 玩家特殊NBT标签
-     */
-    public static class PlayerPersistentData {
-
-        /**
-         * 是否为老玩家
-         */
-        public final static String OLD_PLAYER = "OldPlayer";
-
-        /**
-         * 玩家上次登录时间
-         */
-        public final static String LAST_LOGIN = "LastLogin";
-    }
 }
